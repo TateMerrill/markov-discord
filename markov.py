@@ -2,6 +2,8 @@
 
 import sys
 from random import choice
+import os
+import discord
 
 
 def open_and_read_file(filenames):
@@ -64,3 +66,26 @@ text = open_and_read_file(filenames)
 
 # Get a Markov chain
 chains = make_chains(text)
+
+def new_seuss():
+    return make_text(chains)
+
+client = discord.Client()
+
+@client.event
+async def on_ready():
+    print(f'Successfully connected! Logged in as {client.user}.')
+
+@client.event
+async def on_message(message):
+    if message.author == client.user:
+        return
+
+    if message.content.startswith('Dr'):
+        await message.channel.send(new_seuss())
+
+
+
+
+os.environ.get('DISCORD_TOKEN')
+client.run(os.environ['DISCORD_TOKEN'])
